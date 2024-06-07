@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.urfu.model.dto.AuthDto;
 import ru.urfu.model.dto.RegistrationDto;
+import ru.urfu.model.dto.UserInfoDto;
 import ru.urfu.model.entity.Role;
 import ru.urfu.model.entity.User;
 import ru.urfu.model.repository.UserRepository;
 import ru.urfu.utils.JwtUtils;
 
+import java.security.Principal;
 import java.util.Set;
 
 @Service
@@ -54,6 +56,7 @@ public class UserService {
 
     /**
      * Авторизовать пользователя
+     *
      * @return токен для авторизации
      */
     public String authUser(AuthDto authDto) throws Exception {
@@ -61,7 +64,16 @@ public class UserService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authDto.username(), authDto.password()));
             User user = userRepository.findByUsername(authDto.username());
             return jwtUtils.generateToken(user.toUserDetails());
-        } catch (InternalAuthenticationServiceException e){
+        } catch (InternalAuthenticationServiceException e) {
+            throw new RuntimeException("Пользователь не найден");
+        }
+    }
+
+    public UserInfoDto getUserInfo(Principal principal) {
+        try {
+            User user = userRepository.findByUsername(principal.getName());
+            return new UserInfoDto(user.getUsername(), user.getEmail());
+        } catch (Exception e) {
             throw new RuntimeException("Пользователь не найден");
         }
     }

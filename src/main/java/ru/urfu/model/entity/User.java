@@ -48,6 +48,14 @@ public class User {
         this.roles = roles;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     public UserDetails toUserDetails() {
         return new UserDetails() {
 
