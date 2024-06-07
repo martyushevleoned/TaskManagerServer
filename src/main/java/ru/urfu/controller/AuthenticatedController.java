@@ -40,4 +40,23 @@ public class AuthenticatedController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/getAllTasks")
+    public ResponseEntity<?> getAllTasks(Principal principal) {
+        try {
+            return ResponseEntity.ok(taskService.getAllTasks(principal));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping("/deleteTaskById")
+    public ResponseEntity<?> getAllTasks(Principal principal, @RequestBody String id) {
+        try {
+            taskService.deleteTaskById(Long.parseLong(id));
+            return ResponseEntity.ok(null);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

@@ -47,6 +47,8 @@ public class SecurityConfig {
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/info").authenticated()
                         .requestMatchers("/addTask").authenticated()
+                        .requestMatchers("/getAllTasks").authenticated()
+                        .requestMatchers("/deleteTaskById").authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
