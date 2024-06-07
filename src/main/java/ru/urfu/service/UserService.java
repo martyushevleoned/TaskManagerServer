@@ -69,7 +69,7 @@ public class UserService {
         }
     }
 
-    public UserInfoDto getUserInfo(Principal principal) {
+    public UserInfoDto getUserInfo(Principal principal) throws Exception {
         try {
             User user = userRepository.findByUsername(principal.getName());
             return new UserInfoDto(user.getUsername(), user.getEmail());

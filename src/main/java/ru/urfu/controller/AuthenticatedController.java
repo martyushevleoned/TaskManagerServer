@@ -2,25 +2,42 @@ package ru.urfu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import ru.urfu.model.dto.TaskDto;
 import ru.urfu.model.dto.UserInfoDto;
+import ru.urfu.service.TaskService;
 import ru.urfu.service.UserService;
 
 import java.security.Principal;
 
-@Controller
+@RestController
 public class AuthenticatedController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final TaskService taskService;
 
     @Autowired
-    public AuthenticatedController(UserService userService) {
+    public AuthenticatedController(UserService userService, TaskService taskService) {
         this.userService = userService;
+        this.taskService = taskService;
     }
 
     @GetMapping("/info")
-    public ResponseEntity<UserInfoDto> getInfo(Principal principal){
-        return ResponseEntity.ok(userService.getUserInfo(principal));
+    public ResponseEntity<UserInfoDto> getInfo(Principal principal) {
+        try {
+            return ResponseEntity.ok(userService.getUserInfo(principal));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping("/addTask")
+    public ResponseEntity<?> addTask(Principal principal, @RequestBody String text) {
+        try {
+            taskService.addTask(principal, text);
+            return ResponseEntity.ok(null);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }
